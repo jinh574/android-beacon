@@ -1,5 +1,6 @@
 package com.freakylab.iotivitybeacon;
 
+import android.Manifest;
 import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -7,17 +8,24 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
+import org.altbeacon.beacon.BeaconTransmitter;
+import org.altbeacon.beacon.Identifier;
 import org.altbeacon.beacon.Region;
 import org.altbeacon.beacon.powersave.BackgroundPowerSaver;
 import org.altbeacon.beacon.startup.BootstrapNotifier;
 import org.altbeacon.beacon.startup.RegionBootstrap;
+
+import java.util.Arrays;
 
 // 비콘이 쓰이는 클래스는 BeaconConsumer 인터페이스를 구현해야한다.
 public class IotivityBLE extends Application implements BootstrapNotifier, BeaconConsumer {
@@ -30,6 +38,8 @@ public class IotivityBLE extends Application implements BootstrapNotifier, Beaco
     private RegionBootstrap regionBootstrap;
     private BackgroundPowerSaver backgroundPowerSaver;
     BeaconManager beaconManager;
+    BeaconTransmitter beaconTransmitter;
+    Beacon beacon;
     public static final String IBEACON_FORMAT = "m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24";
 
     @Override
@@ -44,7 +54,7 @@ public class IotivityBLE extends Application implements BootstrapNotifier, Beaco
         //        setBeaconLayout("m:2-3=beac,i:4-19,i:20-21,i:22-23,p:24-24,d:25-25"));
 
         // wake up the app when any beacon is seen (you can specify specific id filers in the parameters below)
-        Region region = new Region("com.freakylab.iotivitybeacon.iotivityBLE", null, null, null);
+        Region region = new Region("com.freakylab.iotivitybeacon.iotivityBLE", Identifier.parse("91558c37-f1d3-4b3a-9248-00271ddc6e42"), null, null);
         regionBootstrap = new RegionBootstrap(this, region);
 
         backgroundPowerSaver = new BackgroundPowerSaver(this);
@@ -55,6 +65,17 @@ public class IotivityBLE extends Application implements BootstrapNotifier, Beaco
         beaconManager.setForegroundBetweenScanPeriod(5000l);
         beaconManager.bind(this);
 
+        //Trasmiiter
+        beacon = new Beacon.Builder()
+                .setId1("c368ad15dd7249ecb5f9b163bc1fc254")
+                .setId2("20")
+                .setId3("30")
+                .setManufacturer(0x004c)
+                .setTxPower(-59)
+                .build();
+        BeaconParser beaconParser = new BeaconParser()
+                .setBeaconLayout(IBEACON_FORMAT);
+        beaconTransmitter = new BeaconTransmitter(getApplicationContext(), beaconParser);
     }
 
     @Override
@@ -69,7 +90,6 @@ public class IotivityBLE extends Application implements BootstrapNotifier, Beaco
         // if you want the Activity to launch every single time beacons come into view, remove this call.
         //regionBootstrap.disable();
 
-
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         boolean isScreenOn = pm.isScreenOn();
         Log.e("js", ""+isScreenOn);
@@ -83,12 +103,14 @@ public class IotivityBLE extends Application implements BootstrapNotifier, Beaco
         else {
             sendNotification("In");
         }
+        beaconTransmitter.startAdvertising(beacon);
     }
 
     @Override
     public void didExitRegion(Region arg0) {
         // Don't care
         sendNotification("Out");
+        beaconTransmitter.stopAdvertising();
     }
 
     private void sendNotification(String text) {
