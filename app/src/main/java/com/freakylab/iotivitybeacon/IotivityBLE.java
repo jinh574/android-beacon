@@ -30,7 +30,7 @@ import org.altbeacon.beacon.startup.RegionBootstrap;
 import java.util.Arrays;
 import java.util.HashMap;
 
-// 비콘이 쓰이는 클래스는 BeaconConsumer 인터페이스를 구현해야한다.
+// 비콘이 쓰이는 클래스는 BeaconConsumer 인터페이스를 구현해야한다. 최종
 public class IotivityBLE extends Application implements BootstrapNotifier, BeaconConsumer {
     @Override
     public void onBeaconServiceConnect() {
