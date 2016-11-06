@@ -15,6 +15,7 @@ import android.os.PowerManager;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
@@ -73,6 +74,7 @@ public class IotivityBLE extends Application implements BootstrapNotifier, Beaco
     @Override
     public void didDetermineStateForRegion(int arg0, Region arg1) {
         // Don't care
+
     }
 
     @Override
@@ -97,6 +99,7 @@ public class IotivityBLE extends Application implements BootstrapNotifier, Beaco
             // created when a user launches the activity manually and it gets launched from here.
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             this.startActivity(intent);
+            Toast.makeText(this, "경보가 발생했습니다! 안전한 곳으로 대피하세요!", Toast.LENGTH_SHORT).show();
         }
         else {
             sendNotification("경보가 발생했습니다! 안전한 곳으로 대피하세요!");
@@ -131,6 +134,7 @@ public class IotivityBLE extends Application implements BootstrapNotifier, Beaco
             // IMPORTANT: in the AndroidManifest.xml definition of this activity, you must set android:launchMode="singleInstance" or you will get two instances
             // created when a user launches the activity manually and it gets launched from here.
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Toast.makeText(this, "이제 이곳은 안전합니다.", Toast.LENGTH_SHORT).show();
             this.startActivity(intent);
         }
         else {

@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView2"
-        android:text="\n팀장\n한지승\n\n팀원\n강성길\t김민재\n이종찬\t정재혁"
+        android:text="\n팀장\n한지승\n\n팀원\n강성길\t정재혁"
         android:fontFamily="sans-serif"
         android:textAlignment="center"
         android:textSize="24sp"
