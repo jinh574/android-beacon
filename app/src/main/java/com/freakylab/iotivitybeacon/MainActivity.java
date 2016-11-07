@@ -119,11 +119,13 @@ public class MainActivity extends AppCompatActivity {
                 main_text.setText("당신은 안전합니다.");
                 main_image.setImageResource(R.drawable.cloudy_icon);
                 main_background.setBackgroundResource(R.color.main_normal);
+                Toast.makeText(this, "당신은 안전한 곳에 있습니다.", Toast.LENGTH_SHORT).show();
                 break;
             case 1:
                 main_text.setText("화재가 발생하였습니다.\n신속하게 밖으로 대피해주세요!");
                 main_image.setImageResource(R.drawable.bell_icon);
                 main_background.setBackgroundResource(R.color.main_alert);
+                Toast.makeText(this, "경보가 발생했습니다! 안전한 곳으로 대피하세요!", Toast.LENGTH_SHORT).show();
                 break;
             case 2:
                 main_text.setText("건물 관리자가 대피 신호를 보냈습니다\n신속하게 밖으로 대피해주세요!");
