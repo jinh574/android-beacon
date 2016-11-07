@@ -89,20 +89,13 @@ public class IotivityBLE extends Application implements BootstrapNotifier, Beaco
         editor.putInt("alarm", 1);
         editor.commit();
 
+        Intent intent = new Intent(this, MainActivity.class);
+        // IMPORTANT: in the AndroidManifest.xml definition of this activity, you must set android:launchMode="singleInstance" or you will get two instances
+        // created when a user launches the activity manually and it gets launched from here.
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        this.startActivity(intent);
+        sendNotification("경보가 발생했습니다! 안전한 곳으로 대피하세요!");
 
-        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        boolean isScreenOn = pm.isScreenOn();
-        Log.e("js", ""+isScreenOn);
-        if(isScreenOn) {
-            Intent intent = new Intent(this, MainActivity.class);
-            // IMPORTANT: in the AndroidManifest.xml definition of this activity, you must set android:launchMode="singleInstance" or you will get two instances
-            // created when a user launches the activity manually and it gets launched from here.
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            this.startActivity(intent);
-        }
-        else {
-            sendNotification("경보가 발생했습니다! 안전한 곳으로 대피하세요!");
-        }
         //Trasmiiter
         beacon = new Beacon.Builder()
                 .setId1("c368ad15dd7249ecb5f9b163bc1fc254")
@@ -125,19 +118,13 @@ public class IotivityBLE extends Application implements BootstrapNotifier, Beaco
         editor.putInt("alarm", 0);
         editor.apply();
 
-        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        boolean isScreenOn = pm.isScreenOn();
-        Log.e("js", ""+isScreenOn);
-        if(isScreenOn) {
-            Intent intent = new Intent(this, MainActivity.class);
-            // IMPORTANT: in the AndroidManifest.xml definition of this activity, you must set android:launchMode="singleInstance" or you will get two instances
-            // created when a user launches the activity manually and it gets launched from here.
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            this.startActivity(intent);
-        }
-        else {
-            sendNotification("이제 이곳은 안전합니다.");
-        }
+        Intent intent = new Intent(this, MainActivity.class);
+        // IMPORTANT: in the AndroidManifest.xml definition of this activity, you must set android:launchMode="singleInstance" or you will get two instances
+        // created when a user launches the activity manually and it gets launched from here.
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        this.startActivity(intent);
+        sendNotification("이제 이곳은 안전합니다.");
+
         beaconTransmitter.stopAdvertising();
     }
 
